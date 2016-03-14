@@ -1,7 +1,7 @@
 // $(document).ready(function () {
 var conn;
 var ownId;
-// var connected = [];
+var connected = [];
 
 var log = $("#log");
 
@@ -24,7 +24,6 @@ if (window["WebSocket"]) {
 
 function handleEvent(evt) {
     var wsEvent = JSON.parse(evt.data);
-    // log.append($("<div/>").text(wsEvent.event, wsEvent.id));
 
     if (wsEvent.event == "identity" && ownId == undefined) {
         ownId = wsEvent.id
@@ -32,7 +31,16 @@ function handleEvent(evt) {
     }
     if (wsEvent.event == "createPlayer") {
         log.append($("<div/>").text("Created player: " + wsEvent.id));
+        connected.push(wsEvent.id)
+        var pos = wsEvent.pos;
+        var vel = wsEvent.vel;
+        log.append($("<div/>").text(pos, pos.x));
+        // var part = new Particle();
+        // drawPart(part);
     }
+    // if (wsEvent.event == "destroyPlayer") {
+    //     connected...
+    // }
 }
 
 // });
