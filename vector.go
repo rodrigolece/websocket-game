@@ -1,15 +1,23 @@
 package main
 
-type vector struct {
-    x, y float64
-}
+import (
+    "fmt"
+)
+
+type vector [2]float64
 
 func (self *vector) multiply(factor float64) {
-    self.x *= factor
-    self.y *= factor
+    for i := range self {
+        self[i] *= factor
+    }
 }
 
 func (self *vector) add(other *vector) {
-    self.x += other.x
-    self.y += other.y
+    for i := range self {
+        self[i] += other[i]
+    }
+}
+
+func (self *vector) String() string {
+	return fmt.Sprintf("[%v, %v]", self[0], self[1])
 }

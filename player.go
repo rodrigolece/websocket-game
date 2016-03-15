@@ -89,7 +89,7 @@ func (self *player) writer() {
 }
 
 func (self *player) tick() {
-	self.pos.add(self.vel)
+	self.pos.add(self.vel) // x + v * dt
 }
 
 func (self *player) update() {

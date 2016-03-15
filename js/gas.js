@@ -1,5 +1,6 @@
-// var canvas = document.getElementById("canvas");
-var canvas = $("#canvas");
+
+var canvas = document.getElementById("canvas");
+// var canvas = $("#canvas");
 var ctx = canvas.getContext("2d");
 
 var radiusParticle = 1/50;
