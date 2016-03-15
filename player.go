@@ -37,7 +37,7 @@ func newPlayer(ws *websocket.Conn) *player {
 	self.wsEvent = &wsEvent{}
 
 	// Valores de prueba para empezar
-	self.pos = &vector{0, 0}
+	self.pos = &vector{0.2, 0.3}
 	self.vel = &vector{0.1, 0.2}
 	self.vel.multiply(frameS) // incluye el intervalo de tiempo
 

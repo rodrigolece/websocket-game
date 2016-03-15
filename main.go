@@ -9,7 +9,7 @@ import (
 
 const (
 	fps = 30
-	frameS = 1 / fps
+	frameS = 1 / float64(fps)
 	// frameMs = 1000 / fps
 	frameNs = int(1e9) / fps
 )

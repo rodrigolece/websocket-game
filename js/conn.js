@@ -34,9 +34,12 @@ function handleEvent(evt) {
         connected.push(wsEvent.id)
         var pos = wsEvent.pos;
         var vel = wsEvent.vel;
-        log.append($("<div/>").text(pos, pos.x));
-        // var part = new Particle();
+
+        part = new Particle(pos, vel);
         // drawPart(part);
+        requestAnimationFrame(animate);
+        // log.append($("<div/>").text(part.pos.x));
+        // log.append($("<div/>").text(part.vel.vx));
     }
     // if (wsEvent.event == "destroyPlayer") {
     //     connected...
