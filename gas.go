@@ -7,7 +7,7 @@ import (
 const (
     lx = 1.
     ly = 1.
-    radiusParticle = 1 / 50
+    radiusParticle = float64(1) / 50
 )
 
 type gas struct {

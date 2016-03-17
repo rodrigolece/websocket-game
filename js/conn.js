@@ -45,6 +45,7 @@ function handleEvent(evt) {
         if (wsEvent.id == ownId) {
             part.pos = wsEvent.pos;
             part.vel = wsEvent.vel;
+            // drawPart(part)
         }
     }
 }
