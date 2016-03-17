@@ -7,6 +7,7 @@ import (
 const (
     lx = 1.
     ly = 1.
+    radiusParticle = 1 / 50
 )
 
 type gas struct {
@@ -36,29 +37,36 @@ func newGas() *gas {
 }
 
 func (self *gas) run() {
-    start := time.Now().UnixNano()
-    // Actualizamos posición de jugadores y les avisamos
-    for p := range self.players {
-        p.tick()
-        p.update()
-    }
 
-    // Quitamos jugadores
-    removing := true
-    for removing {
-        select {
-        case p := <-self.remove:
-            self.removePlayer(p)
-        default:
-            removing = false
+    var start, timeElapsed, sleep int64
+
+    for {
+        start = time.Now().UnixNano()
+        // Actualizamos posición de jugadores y les avisamos
+        for p := range self.players {
+            p.tick()
+            p.update()
         }
+
+        // Quitamos jugadores
+        removing := true
+        for removing {
+            select {
+            case p := <-self.remove:
+                self.removePlayer(p)
+            default:
+                removing = false
+            }
+        }
+
+        timeElapsed = time.Now().UnixNano() - start
+        sleep = frameNs - timeElapsed
+
+        // Necesario para que corra a un número constante de fps
+        time.Sleep(time.Duration(sleep) * time.Nanosecond)
+        /* time.Sleep recibe como argumento una duración. time.Nanosecond es
+        de tipo Duration. */
     }
-
-    timeElapsed := time.Now().UnixNano() - start
-    sleep := int64(frameNs) - timeElapsed
-
-    // Necesario para que corra a un número constante de fps
-    time.Sleep(time.Duration(sleep) * time.Nanosecond)
 }
 
 func (self *gas) broadcast(event []byte) {

@@ -7,7 +7,8 @@ import (
 )
 
 const (
-	maxPlayerSpeed = 3.
+	// maxPlayerSpeed = 3.
+	velScaling = 1e-2
 )
 
 type player struct {
@@ -39,7 +40,8 @@ func newPlayer(ws *websocket.Conn) *player {
 	// Valores de prueba para empezar
 	self.pos = randVector()
 	self.vel = randVector()
-	self.vel.multiply(frameS) // incluye el intervalo de tiempo
+	self.vel.multiply(velScaling)
+	// self.vel.multiply(frameS)
 
 	return self
 }
@@ -83,13 +85,23 @@ func (self *player) writer() {
 		if err != nil {
 			break
 		}
-		// log.Println("Succesfully created new player.")
+		// log.Printf("%s <- %s\n", self.ws.RemoteAddr(), event)
 	}
 	self.ws.Close()
 }
 
 func (self *player) tick() {
-	self.pos.add(self.vel) // x + v * dt
+	futurex := self.pos[0] + self.vel[0]
+    futurey := self.pos[1] + self.vel[1]
+
+    if (futurex + radiusParticle > lx || futurex - radiusParticle < 0) {
+        self.vel[0] *= -1;
+    }
+    if (futurey + radiusParticle > ly || futurey - radiusParticle < 0) {
+        self.vel[1] *= -1;
+    }
+
+	self.pos.add(self.vel)
 }
 
 func (self *player) update() {
@@ -105,6 +117,6 @@ func (self *player) update() {
 }
 
 func (self *player) isNear(other *player) bool {
-	// Meter aquí in cálculo
+	// Meter aquí un cálculo
 	return true
 }
