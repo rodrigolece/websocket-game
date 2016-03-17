@@ -12,10 +12,14 @@ func init() {
 }
 
 func randString(n int) string {
-    // El resultado de letters[i] es de tipo uint8 (byte)
     b := make([]byte, n)
+    // El resultado de letters[i] es de tipo uint8 (byte)
     for i := range b {
         b[i] = letters[rand.Intn(len(letters))]
     }
     return string(b)
+}
+
+func randVector() *vector {
+    return &vector{rand.Float64(), rand.Float64()}
 }
