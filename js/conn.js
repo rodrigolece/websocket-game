@@ -36,19 +36,15 @@ function handleEvent(evt) {
         var vel = wsEvent.vel;
 
         part = new Particle(pos, vel);
-        // requestAnimationFrame(animate);
+        requestAnimationFrame(animate);
     }
     // if (wsEvent.event == "destroyPlayer") {
     //     connected...
     // }
     if (wsEvent.event == "update") {
         if (wsEvent.id == ownId) {
-            part.pos = {
-                x: wsEvent.pos[0],
-                y: wsEvent.pos[1]
-            };
-            drawPart(part)
-            // part.vel = wsEvent.vel;
+            part.pos = wsEvent.pos;
+            part.vel = wsEvent.vel;
         }
     }
 }

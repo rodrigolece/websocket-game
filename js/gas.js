@@ -26,31 +26,29 @@ function animate(time) {
 }
 
 function Particle(pos, vel, i) {
-    this.pos = {x: pos[0], y: pos[1]};
-    this.vel = {vx: vel[0], vy: vel[1]};
+    this.pos = pos
+    this.vel = vel;
     this.move = moveParticle;
     // this.index = i;
 }
 function drawPart(part) {
     ctx.beginPath();
-    ctx.arc(canvas.width * part.pos.x, canvas.height * part.pos.y,
+    ctx.arc(canvas.width * part.pos[0], canvas.height * part.pos[1],
         canvas.width*radiusParticle, 0, 2*Math.PI);
     ctx.stroke();
 }
 
 
 function moveParticle(Dt) {
-    futurex = this.pos.x + this.vel.vx * Dt;
-    futurey = this.pos.y + this.vel.vy * Dt;
+    var x = this.pos[0]; var y = this.pos[1];
+    futurex = x + this.vel[0] * Dt;
+    futurey = y + this.vel[1] * Dt;
 
     if (futurex + radiusParticle > lx || futurex - radiusParticle < 0) {
-        this.vel.vx *= -1;
+        this.vel[0] *= -1;
     }
     if (futurey + radiusParticle > ly || futurey - radiusParticle < 0) {
-        this.vel.vy *= -1;
+        this.vel[1] *= -1;
     }
-    this.pos = {
-        x: this.pos.x + this.vel.vx * Dt,
-        y: this.pos.y + this.vel.vy * Dt
-    };
+    this.pos = [x + this.vel[0] * Dt, y + this.vel[1] * Dt] ;
 }
