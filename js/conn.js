@@ -1,10 +1,5 @@
+
 // $(document).ready(function () {
-var conn;
-var ownId;
-var connected = [];
-
-var log = $("#log");
-
 
 if (window["WebSocket"]) {
     // Dirección metida a mano abajo
@@ -31,7 +26,7 @@ function handleEvent(evt) {
     }
     if (wsEvent.event == "createPlayer") {
         log.append($("<div/>").text("Created player: " + wsEvent.id));
-        connected.push(wsEvent.id)
+        connected.push(wsEvent.id);
         var pos = wsEvent.pos;
         var vel = wsEvent.vel;
 
@@ -45,7 +40,6 @@ function handleEvent(evt) {
         if (wsEvent.id == ownId) {
             part.pos = wsEvent.pos;
             part.vel = wsEvent.vel;
-            // drawPart(part)
         }
     }
 }

@@ -1,45 +1,34 @@
 
-function keyDownEvent(direction) {
-    return JSON.stringify( {
-        event: "keyDown",
-        direction: direction
-    } )
-}
-
-// function kewUpEvent(direction) {
-//     return JSON.stringify( {
-//         event: "keyUp",
-//         direction: direction
-//     } )
-// }
-
 addEventListener("keydown", function(evt) {
     var direction = null;
     // Left arrow
     if (evt.keyCode == 37) {
         direction = "left";
+        left();
         evt.preventDefault();
     }
     // Right arrow
     if (evt.keyCode == 39) {
         direction = "right";
+        right();
         evt.preventDefault();
     }
     // Up arrow
     if (evt.keyCode == 38) {
         direction = "up";
+        up();
         evt.preventDefault();
     }
     // Down arrow
     if (evt.keyCode == 40) {
         direction = "down";
+        down();
         evt.preventDefault();
     }
 
     if (direction != null) {
-        var j = keyDownEvent(direction)
-        log.append($("<div/>").text(JSON.parse(j).direction))
-        conn.send(j);
+        // conn.send(keyDownEvent(direction));
+        part.changeVel(direction)
     }
 
     /*

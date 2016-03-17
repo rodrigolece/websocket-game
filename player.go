@@ -4,11 +4,13 @@ import (
 	"encoding/json"
 	"log"
 	"github.com/gorilla/websocket"
+	"math"
 )
 
 const (
 	// maxPlayerSpeed = 3.
 	velScaling = 1e-2
+	turnAngle = math.Pi/30
 )
 
 type player struct {
@@ -17,8 +19,7 @@ type player struct {
 	id     string
 	// addr    *net.Addr
 
-	// Antes se creaba en reader pero sólo se necesita uno por jugador
-	*wsEvent // Embedded para entrar directo a las variables
+	*control // Embedded para entrar directo a las variables
 
 	gas *gas
 	pos *vector // Se pordrían mover a *entity
@@ -35,7 +36,7 @@ func newPlayer(ws *websocket.Conn) *player {
 		self.output = nil
 	}
 
-	self.wsEvent = &wsEvent{}
+	self.control = newControl()
 
 	// Valores de prueba para empezar
 	self.pos = randVector()
@@ -70,9 +71,9 @@ func (self *player) reader() {
 		if err != nil {
 			break
 		}
-		json.Unmarshal(event, self.wsEvent)
+		json.Unmarshal(event, self.control)
 		log.Printf("%s -> %s\n", self.ws.RemoteAddr(), event)
-		// go handleWsEvent(c, j) esto ahora lo hace cada función?
+		// go handleWsEvent(c, j) tick usa directamente el cambio de estado
 	}
 	self.ws.Close()
 	// Hay más cosas que se tienen que hacer para matar a un jugador
@@ -90,20 +91,6 @@ func (self *player) writer() {
 	self.ws.Close()
 }
 
-func (self *player) tick() {
-	futurex := self.pos[0] + self.vel[0]
-    futurey := self.pos[1] + self.vel[1]
-
-    if (futurex + radiusParticle > lx || futurex - radiusParticle < 0) {
-        self.vel[0] *= -1;
-    }
-    if (futurey + radiusParticle > ly || futurey - radiusParticle < 0) {
-        self.vel[1] *= -1;
-    }
-
-	self.pos.add(self.vel)
-}
-
 func (self *player) update() {
 	event := updateEvent(self)
 
@@ -119,4 +106,39 @@ func (self *player) update() {
 func (self *player) isNear(other *player) bool {
 	// Meter aquí un cálculo
 	return true
+}
+
+func (self *player) tick() {
+	angle := 0.0
+
+	// Aceleración y rotación
+
+	if self.Accel > 0 {
+		self.vel.multiply(1.02)
+	} else if self.Accel < 0 {
+		self.vel.multiply(0.98)
+	}
+
+	if self.Turn > 0 {
+		angle = turnAngle
+	} else if self.Turn < 0 {
+		angle = turnAngle
+	}
+
+	var c = math.Cos(angle);
+	var s = math.Sin(angle);
+	self.vel[0]  = c * self.vel[0] - s * self.vel[1]
+	self.vel[1] = s * self.vel[0] + c * self.vel[1]
+
+	futurex := self.pos[0] + self.vel[0]
+    futurey := self.pos[1] + self.vel[1]
+
+    if (futurex + radiusParticle > lx || futurex - radiusParticle < 0) {
+        self.vel[0] *= -1;
+    }
+    if (futurey + radiusParticle > ly || futurey - radiusParticle < 0) {
+        self.vel[1] *= -1;
+    }
+
+	self.pos.add(self.vel)
 }

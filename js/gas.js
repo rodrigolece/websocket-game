@@ -1,19 +1,4 @@
 
-var FRAMES_PER_SECOND = 30;
-var FRAME_INTERVAL = 1000/FRAMES_PER_SECOND; // JS usa ms como unidad, no ns
-
-var canvas = document.getElementById("canvas");
-// var canvas = $("#canvas");
-var ctx = canvas.getContext("2d");
-var part;
-
-var radiusParticle = 1/50;
-var lx = 1;
-var ly = 1;
-
-var Dt = 0.001; // Valor necesario para inicializar
-var lastTime = null;
-
 function animate(time) {
     if (lastTime != null) {
         Dt = (time - lastTime) / FRAME_INTERVAL;
@@ -26,9 +11,10 @@ function animate(time) {
 }
 
 function Particle(pos, vel, i) {
-    this.pos = pos
+    this.pos = pos;
     this.vel = vel;
     this.move = moveParticle;
+    this.changeVel = changeVel;
     // this.index = i;
 }
 function drawPart(part) {
@@ -51,4 +37,31 @@ function moveParticle(Dt) {
         this.vel[1] *= -1;
     }
     this.pos = [x + this.vel[0] * Dt, y + this.vel[1] * Dt] ;
+}
+
+function changeVel(direction) {
+    var angle = null;
+    var factor = null;
+
+    if (direction == "left") {
+        // Cuidado! JS define los ángulos en sentido de las manecillas del reloj
+        angle = -turnAngle;
+    }
+    if (direction == "right") {
+        angle = turnAngle;
+    }
+    if (direction == "up") {
+        factor = 1.02;
+    }
+    if (direction == "down") {
+        factor = 0.98;
+    }
+
+    if (angle != null) {
+        var c = Math.cos(angle);
+        var s = Math.sin(angle);
+        this.vel = [ c * this.vel[0] - s * this.vel[1], s * this.vel[0] + c * this.vel[1] ];
+    } else if (factor != null) {
+        this.vel = [ this.vel.vx * factor, this.vel.vy * factor ]
+    }
 }
