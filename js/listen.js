@@ -4,25 +4,25 @@ addEventListener("keydown", function(evt) {
     // Left arrow
     if (evt.keyCode == 37) {
         direction = "left";
-        left();
+        left(true);
         evt.preventDefault();
     }
     // Right arrow
     if (evt.keyCode == 39) {
         direction = "right";
-        right();
+        right(true);
         evt.preventDefault();
     }
     // Up arrow
     if (evt.keyCode == 38) {
         direction = "up";
-        up();
+        up(true);
         evt.preventDefault();
     }
     // Down arrow
     if (evt.keyCode == 40) {
         direction = "down";
-        down();
+        down(true);
         evt.preventDefault();
     }
 
@@ -43,12 +43,26 @@ addEventListener("keydown", function(evt) {
     */
 
 });
-/* Tal vez esto no se necesita
+
 addEventListener("keyup", function(evt) {
-    // Left or right arrow
-    if (evt.keyCode == 37 || evt.keyCode == 39) {
-        var data =  [{ Type: "stopturn" }];
-        broadcastEvent(data);
+    // Left arrow
+    if (evt.keyCode == 37) {
+        left(false);
         evt.preventDefault();
     }
-});*/
+    // Right arrow
+    if (evt.keyCode == 39) {
+        right(false);
+        evt.preventDefault();
+    }
+    // Up arrow
+    if (evt.keyCode == 38) {
+        up(false);
+        evt.preventDefault();
+    }
+    // Down arrow
+    if (evt.keyCode == 40) {
+        down(false);
+        evt.preventDefault();
+    }
+});

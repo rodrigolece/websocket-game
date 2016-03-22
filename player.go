@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"log"
+	// "log"
 	"github.com/gorilla/websocket"
 	"math"
 )
@@ -72,8 +72,9 @@ func (self *player) reader() {
 			break
 		}
 		json.Unmarshal(event, self.control)
-		log.Printf("%s -> %s\n", self.ws.RemoteAddr(), event)
-		// go handleWsEvent(c, j) tick usa directamente el cambio de estado
+		// log.Printf("%s -> %s\n", self.ws.RemoteAddr(), event)
+		/* go handleWsEvent(c, j)
+		Ya no es necesario porque tick usa directamente el cambio de estado */
 	}
 	self.ws.Close()
 	// Hay más cosas que se tienen que hacer para matar a un jugador
@@ -120,13 +121,13 @@ func (self *player) tick() {
 	}
 
 	if self.Turn > 0 {
-		angle = turnAngle
+		angle = -turnAngle
 	} else if self.Turn < 0 {
 		angle = turnAngle
 	}
 
-	var c = math.Cos(angle);
-	var s = math.Sin(angle);
+	var c = math.Cos(angle)
+	var s = math.Sin(angle)
 	self.vel[0]  = c * self.vel[0] - s * self.vel[1]
 	self.vel[1] = s * self.vel[0] + c * self.vel[1]
 

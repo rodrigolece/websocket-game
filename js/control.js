@@ -17,23 +17,39 @@ function send() {
 
 }
 
-function left() {
-    control.turn = 1;
+function left(turn) {
+    if (turn) {
+        control.turn = 1;
+    } else if (control.turn == 1) {
+        control.turn = 0;
+    }
     send();
 }
 
-function right() {
-    control.turn = -1;
+function right(turn) {
+    if (turn) {
+        control.turn = -1;
+    } else if (control.turn == -1) {
+        control.turn = 0;
+    }
     send();
 }
 
-function up() {
-    control.accel = 1;
+function up(accel) {
+    if (accel) {
+        control.accel = 1;
+    } else if (control.accel == 1) {
+        control.accel = 0;
+    }
     send();
 }
 
-function down() {
-    control.accel = -1;
+function down(accel) {
+    if (accel) {
+        control.accel = -1;
+    } else if (control.accel == -1) {
+        control.accel = 0;
+    }
     send();
 }
 
