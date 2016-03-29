@@ -7,7 +7,7 @@ var FRAME_INTERVAL = 1000/FRAMES_PER_SECOND; // JS usa ms como unidad, no ns
 var canvas = document.getElementById("canvas");
 // var canvas = $("#canvas");
 var ctx = canvas.getContext("2d");
-var part;
+// var part;
 
 var radiusParticle = 1/50;
 var lx = 1;
@@ -24,6 +24,7 @@ var lastTime = null;
 
 var conn;
 var ownId;
-var connected = [];
+var gas = {};
+var numParticles = 0;
 
 var log = $("#log");

@@ -25,23 +25,23 @@ function handleEvent(evt) {
         log.append($("<div/>").text("Succesfully registered id: " + ownId))
     }
     if (wsEvent.event == "createPlayer") {
-        log.append($("<div/>").text("Created player: " + wsEvent.id));
-        connected.push(wsEvent.id);
-        var pos = wsEvent.pos;
-        var vel = wsEvent.vel;
+        var part = new Particle(wsEvent.pos, wsEvent.vel);
+        gas[wsEvent.id] = part;
+        numParticles++ ;
 
-        part = new Particle(pos, vel);
+        log.append($("<div/>").text("Created player: " + wsEvent.id));
         requestAnimationFrame(animate);
     }
     // if (wsEvent.event == "destroyPlayer") {
     //     connected...
     // }
     if (wsEvent.event == "update") {
-        if (wsEvent.id == ownId) {
-            part.pos = wsEvent.pos;
-            part.vel = wsEvent.vel;
-        }
+        var part = gas[wsEvent.id];
+        part.pos = wsEvent.pos;
+        part.vel = wsEvent.vel;
     }
 }
+
+// requestAnimationFrame(animate);
 
 // });

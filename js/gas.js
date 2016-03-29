@@ -5,8 +5,12 @@ function animate(time) {
     }
     lastTime = time;
     ctx.clearRect(0,0,canvas.width,canvas.height)
-    part.move(Dt)
-    drawPart(part);
+    for (var id in gas) {
+        // Importante usar [id] y no .id porque se tiene que evaluar
+        var part = gas[id];
+        part.move(Dt)
+        drawPart(part);
+    }
     requestAnimationFrame(animate);
 }
 
