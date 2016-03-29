@@ -30,7 +30,6 @@ function handleEvent(evt) {
         numParticles++ ;
 
         log.append($("<div/>").text("Created player: " + wsEvent.id));
-        requestAnimationFrame(animate);
     }
     // if (wsEvent.event == "destroyPlayer") {
     //     connected...
@@ -42,6 +41,6 @@ function handleEvent(evt) {
     }
 }
 
-// requestAnimationFrame(animate);
+requestAnimationFrame(animate);
 
 // });
