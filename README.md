@@ -2,8 +2,8 @@
 
 **websocket-game** is a minimum implementation of a massively multiplayer online
 (MMO) game server, written in Go, and a simple client which takes the form of an
-HTML web page. The client-server communication uses a WebSocket connection and a
-homemade protocol written in JSON which we will further discuss.
+HTML web page. The client-server communication passes through a WebSocket connection
+and a uses a homemade protocol written in JSON.
 
 **Disclaimer:** The code was developed mainly as an exercise, to practice Go and
 JavaScript and to understand how WebSockets work. The implementation is naive
@@ -36,13 +36,13 @@ implemented.
 The client is inspired by [this project][2], but it is a much more simple
 implementation. Basic functions are separated on different scripts.
 
-`gas.js` holds the functions that represent the particles, and the functions used
+- `gas.js` holds the functions that represent the particles, and the functions used
 to move them and create the animation.
 
-`listen.js` registers the event handlers for pressing and releasing the keyboard
+- `listen.js` registers the event handlers for pressing and releasing the keyboard
 arrows.
 
-Finally, `conn.js` establishes the WebSocket connection and listens for the server's
+- `conn.js` establishes the WebSocket connection and listens for the server's
 instructions (such as creating or removing a player).
 
 The easiest way to have communication between JS scripts is through global variables.
@@ -55,9 +55,10 @@ need to make is writing real modules (for example with `require.js`).
 The communication between server and clients is made possible by a homemade protocol
 that was established much by trial and error, and has room for lots of improvement.
 
-One of the most important realizations when working on the protocol is that communication
-in one direction or the other does not need to use the same structure. A more typical
-set of instructions is used for the server's events. They take the form of an `event`
+One of the most important realizations we had when working on the protocol was that communication
+in one direction or the other does not need to use the same structure.
+
+A more typical set of instructions is used for the server's events. They take the form of an `event`
 attribute, an `id` attribute and if necessary data such as position and velocity
 vectors. For example, we have the create and destroy player events:
 
