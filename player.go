@@ -38,8 +38,7 @@ func newPlayer(ws *websocket.Conn) *player {
 
 	self.control = newControl()
 
-	// Valores de prueba para empezar
-	self.pos = randVector()
+	self.pos = newPos()
 	self.vel = randVector()
 	self.vel.multiply(velScaling)
 	// self.vel.multiply(frameS)
