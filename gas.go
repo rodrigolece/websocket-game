@@ -10,6 +10,7 @@ const (
     radiusParticle = float64(1) / 50
 )
 
+// A gas holds the set of players (particles)
 type gas struct {
     // numPlayers   int
     players     map[*player]bool
@@ -42,13 +43,13 @@ func (self *gas) run() {
 
     for {
         start = time.Now().UnixNano()
-        // Actualizamos posición de jugadores y les avisamos
+        // We update the position of the players and we send it to them
         for p := range self.players {
             p.tick()
             p.update()
         }
 
-        // Quitamos jugadores
+        // Remove players
         removing := true
         for removing {
             select {
@@ -62,16 +63,16 @@ func (self *gas) run() {
         timeElapsed = time.Now().UnixNano() - start
         sleep = frameNs - timeElapsed
 
-        // Necesario para que corra a un número constante de fps
+        // Necessary to run at a constant rate of fps
         time.Sleep(time.Duration(sleep) * time.Nanosecond)
-        /* time.Sleep recibe como argumento una duración. time.Nanosecond es
-        de tipo Duration. */
+        /* time.Sleep takes a duration for an argument. time.Nanosecond
+        is of type Duration */
     }
 }
 
 func (self *gas) broadcast(event []byte) {
     for player, _ := range self.players {
-        if player.ws != nil { // bots tienen nil
+        if player.ws != nil { // bots have nil
             player.send(event)
         }
     }
@@ -88,11 +89,11 @@ func (self *gas) addPlayer(p *player) {
     p.id = id
     p.gas = self
 
-    // Anunciamos nuevo jugador
+    // We announce the new player
     event = createPlayerEvent(p)
     self.broadcast(event)
 
-    // Al nuevo jugador le anunciamos los jugadores presentes
+    // To the new player we announce existing players
     for otherId, other := range self.ids {
         if otherId != id {
             event = createPlayerEvent(other)
@@ -114,7 +115,7 @@ func (self *gas) newId() string {
     for {
         id = randString(4)
         if _, ok := self.ids[id] ; ok == false {
-            // Sólo regresamos la id si no está en uso
+            // We only take unused ids
             return id
         }
     }

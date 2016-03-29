@@ -11,9 +11,10 @@ func init() {
     rand.Seed(time.Now().UnixNano())
 }
 
+// Used to generate random id
 func randString(n int) string {
     b := make([]byte, n)
-    // El resultado de letters[i] es de tipo uint8 (byte)
+    // The result of letters[i] isof type uint8 (byte)
     for i := range b {
         b[i] = letters[rand.Intn(len(letters))]
     }
@@ -29,6 +30,9 @@ func newPos() *vector {
     out.multiply(1 - 2 * radiusParticle)
     out.add(&vector{radiusParticle, radiusParticle})
     return out
+
+    // We might want to use no overlap once the particles interact with each other
+
     // do {
     //     var overlap = false;
     //     var x = gas.boxSize.lx * Math.random() + radiusParticle;

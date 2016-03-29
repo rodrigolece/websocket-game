@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	// maxPlayerSpeed = 3.
+	// maxPlayerSpeed = 3. CURRENTLY NOT ENFORCED
 	velScaling = 1e-2
 	turnAngle = math.Pi/30
 )
@@ -17,12 +17,11 @@ type player struct {
 	ws     *websocket.Conn
 	output chan []byte
 	id     string
-	// addr    *net.Addr
 
-	*control // Embedded para entrar directo a las variables
+	*control // Embedded so we can read directly its varibles
 
 	gas *gas
-	pos *vector // Se pordrían mover a *entity
+	pos *vector
 	vel *vector
 }
 
@@ -31,7 +30,7 @@ func newPlayer(ws *websocket.Conn) *player {
 	self.ws = ws
 
 	if ws != nil {
-		self.output = make(chan []byte, 256) // buffereado para que no bloquee
+		self.output = make(chan []byte, 256) // buffered so it doesn't block
 	} else {
 		self.output = nil
 	}
@@ -41,7 +40,6 @@ func newPlayer(ws *websocket.Conn) *player {
 	self.pos = newPos()
 	self.vel = randVector()
 	self.vel.multiply(velScaling)
-	// self.vel.multiply(frameS)
 
 	return self
 }
@@ -73,15 +71,14 @@ func (self *player) reader() {
 		json.Unmarshal(event, self.control)
 		// log.Printf("%s -> %s\n", self.ws.RemoteAddr(), event)
 		/* go handleWsEvent(c, j)
-		Ya no es necesario porque tick usa directamente el cambio de estado */
+		No longer necessary, tick uses directly the new sate */
 	}
 	self.ws.Close()
-	// Hay más cosas que se tienen que hacer para matar a un jugador
+	// We need to remove a player more carefully!
 }
 
 func (self *player) writer() {
 	for event := range self.output {
-		// por este range de aquí es importante cerrar el canal en hub
 		err := self.ws.WriteMessage(websocket.TextMessage, event)
 		if err != nil {
 			break
@@ -95,7 +92,7 @@ func (self *player) update() {
 	event := updateEvent(self)
 
 	for p := range self.gas.players {
-		if p.ws != nil && p.output != nil { // No se manda a los bots
+		if p.ws != nil && p.output != nil { // Not sent to bots
 			if self.isNear(p) {
 				p.send(event)
 			}
@@ -104,21 +101,21 @@ func (self *player) update() {
 }
 
 func (self *player) isNear(other *player) bool {
-	// Meter aquí un cálculo
+	// Calculation goes here
 	return true
 }
 
 func (self *player) tick() {
 	angle := 0.0
 
-	// Aceleración y rotación
-
+	// Acceletaton
 	if self.Accel > 0 {
 		self.vel.multiply(1.02)
 	} else if self.Accel < 0 {
 		self.vel.multiply(0.98)
 	}
 
+	// Rotation
 	if self.Turn > 0 {
 		angle = -turnAngle
 	} else if self.Turn < 0 {
@@ -130,6 +127,7 @@ func (self *player) tick() {
 	self.vel[0]  = c * self.vel[0] - s * self.vel[1]
 	self.vel[1] = s * self.vel[0] + c * self.vel[1]
 
+	// And we move the particle, taking into account reflection at the borders
 	futurex := self.pos[0] + self.vel[0]
     futurey := self.pos[1] + self.vel[1]
 

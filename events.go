@@ -4,6 +4,7 @@ import (
     "fmt"
 )
 
+// The events that we write to the clients
 type wsEvent struct{
     //The json package only accesses the exported fields of struct types
     Event   string `json:"event"`
@@ -20,7 +21,7 @@ func identityEvent(id string) []byte {
 func createPlayerEvent(p *player) []byte {
     s := fmt.Sprintf(`{"event":"createPlayer", "id":"%s", "pos":%v, "vel":%v}`,
         p.id, p.pos, p.vel)
-    // fmt.Println(s)
+    // fmt.Println(s) for debugging
     return []byte(s)
 }
 
